@@ -1,0 +1,18 @@
+DECLARE 012
+
+# klasy abstrakcji po wykonaniu polecenia i ich energia po dwukropku
+# {0}:1, {01, 012}:None
+ENERGY 0 1
+
+# {0, 01}:1 {012}:None
+EQUAL 0 01
+
+# {0, 01}:1 {012}:7
+ENERGY 012 7
+
+# {0, 01, 012}:4 (=(1+7)/2, a nie (1+1+7)/3)
+EQUAL 0 012
+
+ENERGY 0
+ENERGY 01
+ENERGY 012

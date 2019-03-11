@@ -1,0 +1,14 @@
+DECLARE 01
+
+#obie historie mają takie same energie, ale nie są w relacji równoważności
+ENERGY 01 5
+ENERGY 0 5
+
+ENERGY 01
+ENERGY 0
+
+#zmiana jednej nie powinna powodować zmiany drugiej
+ENERGY 0 10
+
+ENERGY 01
+ENERGY 0

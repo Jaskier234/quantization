@@ -1,0 +1,14 @@
+#deklarujemy historię 0 i ustawiamy jej energię
+DECLARE 0
+ENERGY 0 5
+
+#usuwamy historię 0
+REMOVE 0
+
+#program powinien zapomnieć o tym, że energia byłą równa 5
+ENERGY 0
+
+DECLARE 0
+
+#nadal spodziewany ERROR
+ENERGY 0

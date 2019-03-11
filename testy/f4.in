@@ -1,0 +1,6 @@
+#wiodące zera w parametrze energy
+DECLARE 2310
+
+ENERGY 2310 00012
+
+ENERGY 2310
