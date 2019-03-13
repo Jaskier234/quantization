@@ -20,3 +20,11 @@ char *readLine()
 
     return str;
 }
+
+char **split(char *str)
+{
+    char **words = malloc(3);
+    int iterator = 0;
+    int wordCounter = 0;
+    while( str[iterator] != '\n' )
+}
