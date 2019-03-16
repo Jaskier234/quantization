@@ -8,5 +8,6 @@
 // } str;
 
 char *readLine();
+char **split(char*);
 
 #endif // str_h

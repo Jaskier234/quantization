@@ -1,25 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
-
-char *read()
-{
-    char *str = malloc(10);
-    int l = -1;
-    do
-    {
-        l++;
-        scanf("%c", str+l);
-    }
-    while(str[l] != '\n');
-    str[l] = 0;
-    return str;
-}
+#include "str.h"
 
 int main()
 {
-    struct num n;
-    n.a = 10;
-    n.inc();
-    printf("%d", n.a);
+    char **tab = split(readLine());
+
+    char **for_free = tab;
+    while(*tab != NULL)
+    {
+        printf("%s\n", *tab);
+        tab++;
+    }
+
+    free(*for_free);
+    free(for_free);
+
     return 0;
 }

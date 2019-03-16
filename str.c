@@ -1,4 +1,6 @@
-#include "srt.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include "str.h"
 
 char *readLine()
 {
@@ -11,10 +13,10 @@ char *readLine()
         if( lineSize == allocatedMemory )
         {
             // sprawdzić czy się da
-            realloc(str, allocatedMemory*2);
+            str = realloc(str, allocatedMemory*2);
             allocatedMemory *= 2;
         }
-        scanf("%c", str[lineSize]);
+        scanf("%c", &str[lineSize]);
         lineSize++;
     } while(str[lineSize-1] != '\n');
 
@@ -23,8 +25,41 @@ char *readLine()
 
 char **split(char *str)
 {
-    char **words = malloc(3);
-    int iterator = 0;
+    int allocatedMemory = 3;
+    char **words = malloc(allocatedMemory*sizeof(char**));
+
     int wordCounter = 0;
-    while( str[iterator] != '\n' )
+    char *lastWordStart = str;
+    while(*str != '\n')
+    {
+        if(*str == ' ')
+        {
+            if(wordCounter == allocatedMemory)
+            {
+                allocatedMemory *= 2;
+                words = realloc(words, allocatedMemory*sizeof(char**));
+            }
+            words[wordCounter] = lastWordStart;
+            wordCounter++;
+            lastWordStart = str+1;
+            *str = 0;
+        }
+        str++;
+    }
+
+    *str = 0;
+
+    if(wordCounter == allocatedMemory)
+    {
+        allocatedMemory *= 2;
+        words = realloc(words, allocatedMemory*sizeof(char**));
+    }
+    if(lastWordStart != str)
+    {
+        words[wordCounter] = lastWordStart;
+        wordCounter++;
+    }
+    words[wordCounter] = NULL;
+
+    return words;
 }
