@@ -1,46 +1,32 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "str.h"
+#include "vector.h"
 
 char *readLine()
 {
-    int allocatedMemory = 10;
-    char *str = malloc(allocatedMemory);
-    int lineSize = 0;
+    Vector strChar = vectorDefault;
 
+    char c;
     do
     {
-        if( lineSize == allocatedMemory )
-        {
-            // sprawdzić czy się da
-            str = realloc(str, allocatedMemory*2);
-            allocatedMemory *= 2;
-        }
-        scanf("%c", &str[lineSize]);
-        lineSize++;
-    } while(str[lineSize-1] != '\n');
+        scanf("%c", &c);
+        pushChar(&strChar, c);
+    } while(c != '\n');
 
-    return str;
+    return (char*)strChar.c;
 }
 
 char **split(char *str)
 {
-    int allocatedMemory = 3;
-    char **words = malloc(allocatedMemory*sizeof(char**));
+    Vector words = vectorDefault;
 
-    int wordCounter = 0;
     char *lastWordStart = str;
     while(*str != '\n')
     {
         if(*str == ' ')
         {
-            if(wordCounter == allocatedMemory)
-            {
-                allocatedMemory *= 2;
-                words = realloc(words, allocatedMemory*sizeof(char**));
-            }
-            words[wordCounter] = lastWordStart;
-            wordCounter++;
+            pushCharPtr(&words, lastWordStart);
             lastWordStart = str+1;
             *str = 0;
         }
@@ -49,17 +35,11 @@ char **split(char *str)
 
     *str = 0;
 
-    if(wordCounter == allocatedMemory)
-    {
-        allocatedMemory *= 2;
-        words = realloc(words, allocatedMemory*sizeof(char**));
-    }
     if(lastWordStart != str)
     {
-        words[wordCounter] = lastWordStart;
-        wordCounter++;
+        pushCharPtr(&words, lastWordStart);
     }
-    words[wordCounter] = NULL;
+    pushCharPtr(&words, NULL);
 
-    return words;
+    return (char**)words.c;
 }
