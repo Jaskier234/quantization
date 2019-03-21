@@ -47,6 +47,7 @@ void freeElement(Element *elem)
         free(elem->list->end);// pamiętać o energii. może funkcja od tego?
         free(elem->list->begin);
         free(elem->list->energy);
+        // printf("%p\n", elem->list->energy);
         free(elem->list);
     }
     free(elem);

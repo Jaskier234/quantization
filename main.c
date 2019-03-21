@@ -55,7 +55,8 @@ int main()
                 else
                 {
                     Element *elem = listElem(trie, args[1]);
-                    elem->list->energy = malloc(sizeof(long long)); // poprawić
+                    if(elem->list->energy == NULL)
+                        elem->list->energy = malloc(sizeof(long long)); // poprawić
                     *elem->list->energy = atoi(args[2]); // zastąpić funkcję atoi
                     printf("OK\n");
                 }
