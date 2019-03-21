@@ -3,11 +3,12 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include "list.h"
 
 typedef struct Node
 {
     struct Node *next[4];
-    // bool declared; // czy potrzebne?
+    struct Element *energyClass;
 } Node;
 
 Node trieDefault;
@@ -15,5 +16,7 @@ Node trieDefault;
 void insert(Node*, char*);
 void del(Node*, char*);
 bool declared(Node*, char*);
+void freeNode(Node*);
+struct Element *listElem(Node*, char*);
 
 #endif // trie_h

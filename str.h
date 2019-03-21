@@ -3,5 +3,6 @@
 
 char *readLine();
 char **split(char*);
+char *nextCommand();
 
 #endif // str_h
