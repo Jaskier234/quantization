@@ -1,9 +1,11 @@
 #include "valid.h"
+
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+// Checks if string energy is convertable to uint64_t
 bool correctInt(char *energy)
 {
     if(strcmp(energy,"0") == 0)
@@ -34,6 +36,8 @@ bool correctInt(char *energy)
     return true; // poprawić!!!;
 }
 
+// Compares len first charachers of two strings
+// if any of them is shorter than len returns false
 bool cmpPref(char*line1, char* line2, int len)
 {
     for(int i=0; i<len; i++)
@@ -51,6 +55,8 @@ bool cmpPref(char*line1, char* line2, int len)
     return true;
 }
 
+// Checks if at the beginning of string *input is correct command and returns
+// pointer to string with that command
 char *readCommand(char **input)
 {
     char *command = *input;
@@ -82,6 +88,7 @@ char *readCommand(char **input)
     return NULL;
 }
 
+// works similar to readCommand but with history
 char *readHistory(char **input)
 {
     if(**input != ' ')
@@ -105,6 +112,7 @@ char *readHistory(char **input)
 
 }
 
+// works similar to readCommand but with number
 char *readInt(char **input)
 {
     if(**input != ' ')
@@ -125,17 +133,22 @@ char *readInt(char **input)
     }
     return number;
 }
+
+// Checks if input is correct command. If the command is correct it splits
+// to array of words separated by single spaces ans sets it into args
 // 0 - wrong line
 // 1 - correct line
 // 2 - ignore line
-int correct(char *input, char **args)// args - zaalokowany wcześniej adres na komnedy. wystarczy 3 komórki
+int correct(char *input, char **args)
 {
-
+    // Ignored lines
     if(*input == '#' || *input == '\n')
     {
         return 2;
     }
 
+    // If in line is a single characher diffrent than '#' or '\n' it, incorrect
+    // line
     int inputSize = strlen(input);
     if(inputSize == 1)
     {

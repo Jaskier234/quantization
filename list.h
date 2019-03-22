@@ -29,10 +29,10 @@ Element *createList();
 
 // Removes Element from list and deallocates memory. If then List is empty also
 // deallocates List
-void freeElement(Element*);
+void freeElement(Element *list);
 
 // Merge function takes as an arguments pointers to Elements and merges Lists
 // associated with these elements
-void merge(Element*, Element*);
+void merge(Element *elem1, Element *elem2);
 
 #endif // list_h

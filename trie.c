@@ -59,6 +59,7 @@ void freeNode(Node *t)
     free(t);
 }
 
+// Removes history from tree
 void del(Node *t, char*history)
 {
     // Checking if history length is equal to 1
@@ -76,6 +77,7 @@ void del(Node *t, char*history)
     del(t->next[charToInt(*history)], history+1);
 }
 
+// returns Element associated with history
 Element *listElem(Node *t, char *history)
 {
     if(strcmp(history, "") == 0)

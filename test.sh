@@ -15,9 +15,9 @@ for f in $2*.in; do
     else
         echo "test $f ZŁA ODPOWIEDŹ"
     fi
-
+    # If third argument is passed test script runs program with valgrind
     if [ $# -eq 3 ]; then
         valgrind --error-exitcode=15 --leak-check=full --show-leak-kinds=all\
-         --errors-for-leak-kinds=all $1 <$f >ans.out
+         --errors-for-leak-kinds=all $1 <$f >ans.out 2>ans.err
     fi
 done

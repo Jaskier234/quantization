@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+
 #include "list.h"
 
 // This module keeps track of which histories are declared

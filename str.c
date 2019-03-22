@@ -1,82 +1,29 @@
 #define _GNU_SOURCE
+#include "str.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include "str.h"
-#include "vector.h"
+#include <inttypes.h>
+
 #include "valid.h"
 
-
-// char *readLine()
-// {
-//     Vector strChar = vectorDefault;
-//
-//     char c;
-//     do
-//     {
-//         scanf("%c", &c);
-//         pushChar(&strChar, c);
-//     } while(c != '\n');
-//
-//     return (char*)strChar.c;
-// }
-
-char **split(char *str)
+// Returns next correct command or NULL when there is no more commands
+char **nextCommand()
 {
-    Vector words = vectorDefault;
-
-    int size = strlen(str);
-
-    // if(size > 0 && str[0] == '#')
-    //     return (char**)words.c;
-
-    if(size < 1 || str[size-1] != '\n')
-        return NULL;
-
-    if(size >= 2 && str[size-2] == ' ')
-        return NULL;
-
-    // printf("split: %s\n", str);
-    if(strcmp(str,"") == 0 || str == NULL)// do przemyślenia
-        return (char**)words.c;
-
-    char *lastWordStart = str;
-    while(*str != '\n')
-    {
-        if(*str == ' ')
-        {
-            pushCharPtr(&words, lastWordStart);
-            lastWordStart = str+1;
-            *str = '\0';
-        }
-        str++;
-    }
-
-    *str = '\0';
-
-    if(lastWordStart != str)
-    {
-        pushCharPtr(&words, lastWordStart);
-    }
-    pushCharPtr(&words, NULL);
-
-    return (char**)words.c;
-}
-
-// bool correct(char *command)// być może do oddzielnego modułu
-// {
-//     return (command[0] != '\n' && command[0] != '#');// do poprawienia
-// }
-
-char **nextCommand() // zwraca następną poprawną komendę
-{
+    // Memory for getline
     size_t size = 16;
     char *input = malloc(size);
-    int result;
-    char **splittedInput = calloc(5, sizeof(char*));
+
+    // Pointer passed to correct witch contains array of command parameters
+    // splitted into separate words
+    char **splittedInput = malloc(5 * sizeof(char*));
     int isCorrect;
+    int result;
+
+    if(input == NULL || splittedInput == NULL)
+        exit(1);
+
     do
     {
         for(int i=0; i<5; i++)
@@ -84,7 +31,6 @@ char **nextCommand() // zwraca następną poprawną komendę
         result = getline(&input, &size, stdin);
         if(result != -1)
         {
-            // splittedInput = split(input);
             isCorrect = correct(input, splittedInput);
             if(isCorrect == 0)
                 fprintf( stderr, "ERROR\n");
@@ -94,12 +40,14 @@ char **nextCommand() // zwraca następną poprawną komendę
     if(result == -1)
     {
         free(input);
+        free(splittedInput);
         return NULL;
     }
     else
         return splittedInput;
 }
 
+// Converts string to uint64_t
 uint64_t stringToNum(char *string)
 {
     uint64_t number = 0;
