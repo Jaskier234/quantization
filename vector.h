@@ -1,6 +1,8 @@
 #ifndef vector_h
 #define vector_h
 
+// Simple vector, used to manage memory
+
 typedef struct
 {
     int allocatedMemory;
@@ -8,6 +10,7 @@ typedef struct
     void *c;
 } Vector;
 
+// To initialize
 Vector vectorDefault;
 
 // char vector functions

@@ -1,39 +1,52 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "list.h"
 
-List listDefault = {1,NULL,NULL,NULL};
+#include <stdlib.h>
+#include <inttypes.h>
 
+void initializeElement(Element *elem, Element *prev, Element* next, List *list)
+{
+    elem->prev = prev;
+    elem->next = next;
+    elem->list = list;
+}
+
+// Creates list with one element and returns pointer to that element(not list)
 Element *createList()
 {
     List *list = malloc(sizeof(List));
     Element *begin = malloc(sizeof(Element));
     Element *end = malloc(sizeof(Element));
     Element *elem = malloc(sizeof(Element));
-    // *list = {1, -1, begin, end};
+
+    // Cheking if there is enough memory to allocate
+    if(list == NULL || begin == NULL || end == NULL || elem == NULL)
+    {
+        exit(1);
+    }
+
     list->size = 1;
-    list->energy = NULL;// do poprawienia
+    list->energy = NULL;
     list->begin = begin;
     list->end = end;
 
-    // *begin = {NULL, elem, list};
-    begin->prev = NULL;
-    begin->next = elem;
-    begin->list = list;
-
-    // *elem = {begin, end, list};
-    elem->prev = begin;
-    elem->next = end;
-    elem->list = list;
-
-    // *end = {elem, NULL, list};
-    end->prev = elem;
-    end->next = NULL;
-    end->list = list;
+    initializeElement(begin, NULL, elem, list);
+    initializeElement(elem, begin, end, list);
+    initializeElement(end, elem, NULL, list);
 
     return elem;
 }
 
+// Deallocates List
+void freeList(List *list)
+{
+    free(list->end);
+    free(list->begin);
+    free(list->energy);
+    free(list);
+}
+
+// Removes Element from list and deallocates memory. If then List is empty also
+// deallocates List
 void freeElement(Element *elem)
 {
     if(elem == NULL)
@@ -44,36 +57,46 @@ void freeElement(Element *elem)
     elem->list->size--;
     if(elem->list->size == 0)
     {
-        free(elem->list->end);// pamiętać o energii. może funkcja od tego?
-        free(elem->list->begin);
-        free(elem->list->energy);
-        // printf("%p\n", elem->list->energy);
-        free(elem->list);
+        freeList(elem->list);
     }
     free(elem);
 }
 
+// Merge function takes as an arguments pointers to Elements and merges Lists
+// associated with these elements
 void merge(Element *elem1, Element *elem2)
 {
     if(elem1->list == elem2->list)
         return;
 
-    if( false )
-    {
-        // mniejsza do większej
-    }
-
     List *list1 = elem1->list;
     List *list2 = elem2->list;
 
+    // Always adds smaller List to bigger
+    if( list1->size < list2->size )
+    {
+        List *temp = list1;
+        list1 = list2;
+        list2 = temp;
+    }
+
+    // Calculating energy of new list
     if(list1->energy == NULL && list2->energy != NULL)
     {
         list1->energy = list2->energy;
         list2->energy = NULL;
     }
     else if(list1->energy != NULL && list2->energy != NULL)
-        *list1->energy = (*list1->energy + *list2->energy)/2;// overflow
+    {
+        uint64_t a = *list1->energy;
+        uint64_t b = *list2->energy;
 
+        *list1->energy = (a/2) + (b/2);
+        if(a%2 == 1 && b%2 == 1)
+            (*list1->energy)++;
+    }
+
+    // Merging
     list1->end->prev->next = list2->begin->next;
     list2->begin->next->prev = list1->end->prev;
     list2->end->prev->next = list1->end;
@@ -81,6 +104,7 @@ void merge(Element *elem1, Element *elem2)
 
     list1->size += list2->size;
 
+    // Updating list field in smaller List
     Element *elem = list2->begin->next;
     while(elem != NULL)
     {
@@ -88,9 +112,6 @@ void merge(Element *elem1, Element *elem2)
         elem = elem->next;
     }
 
-    free(list2->end);
-    free(list2->begin);
-    free(list2->energy);
-    // printf("%p\n", list2->energy);
-    free(list2);
+    // The other list is no longer needed
+    freeList(list2);
 }

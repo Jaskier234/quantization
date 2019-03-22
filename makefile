@@ -1,5 +1,5 @@
 CFLAGS = -Wall -Wextra -std=c11 -g #-O2
-OBJS = main.o str.o vector.o trie.o list.o
+OBJS = main.o str.o vector.o trie.o list.o valid.o
 
 quantization: $(OBJS)
 	gcc -o quantization $(OBJS) $(CFLAGS)
@@ -18,6 +18,9 @@ trie.o: trie.c trie.h
 
 list.o: list.c list.h
 	gcc -c list.c $(CFLAGS)
+
+valid.o: valid.c valid.h
+	gcc -c valid.c $(CFLAGS)
 
 clean:
 	rm *.o

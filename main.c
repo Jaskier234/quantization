@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
+#include <inttypes.h>
 #include "str.h"
 #include "vector.h"
 #include "trie.h"
 #include "list.h"
+#include "valid.h"
 
 int main()
 {
@@ -13,11 +16,11 @@ int main()
     *trie = trieDefault;
     while(true)
     {
-        char *tab = nextCommand();
-        if(tab != NULL)
+        char **args = nextCommand();
+        if(args != NULL)
         {
             // printf("%s", tab);
-            char **args = split(tab);
+            // char **args = split(tab);// do pop
             // args validation
             if(strcmp(args[0],"DECLARE") == 0)
             {
@@ -46,30 +49,52 @@ int main()
                 {
                     Element *elem = listElem(trie, args[1]);
                     if(elem == NULL || elem->list->energy == NULL)
-                        printf("ERROR\n"); // zmienić na err
+                        // printf("ERROR\n"); // zmienić na err
+                        fprintf( stderr, "ERROR\n");
                     else
                     {
-                        printf("%lld\n", *elem->list->energy);// typ
+                        printf("%" PRIu64 "\n", *elem->list->energy);// typ
                     }
                 }
                 else
                 {
                     Element *elem = listElem(trie, args[1]);
-                    if(elem->list->energy == NULL)
-                        elem->list->energy = malloc(sizeof(long long)); // poprawić
-                    *elem->list->energy = atoi(args[2]); // zastąpić funkcję atoi
-                    printf("OK\n");
+                    if(elem == NULL)
+                    {
+                        // printf("ERROR\n");
+                        fprintf( stderr, "ERROR\n");
+                    }
+                    else
+                    {
+                        if(elem->list->energy == NULL)
+                            elem->list->energy = malloc(sizeof(uint64_t)); // poprawić
+                        *elem->list->energy = stringToNum(args[2]); // zastąpić funkcję atoi
+                        printf("OK\n");
+                    }
                 }
             }
             else if(strcmp(args[0],"EQUAL") == 0)
             {
                 Element *elem1 = listElem(trie, args[1]);
                 Element *elem2 = listElem(trie, args[2]);
-                merge(elem1, elem2);
-                printf("OK\n");
+                if(elem1 == elem2 && elem1 != NULL)
+                {
+                    printf("OK\n");
+                }
+                else if(elem1 == NULL || elem2 == NULL ||
+                  (elem1->list->energy == NULL && elem2->list->energy == NULL))
+                {
+                    // printf("ERROR\n");
+                    fprintf( stderr, "ERROR\n");
+                }
+                else
+                {
+                    merge(elem1, elem2);
+                    printf("OK\n");
+                }
             }
+            free(args[0]);
             free(args);
-            free(tab);
         }
         else
         {
@@ -77,6 +102,7 @@ int main()
         }
     }
     freeNode(trie);
+
     // size_t size = 1024;
     // char* input = malloc(size);
     //
