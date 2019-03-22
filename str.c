@@ -75,16 +75,17 @@ char **nextCommand() // zwraca następną poprawną komendę
     size_t size = 16;
     char *input = malloc(size);
     int result;
-    char **splittedInput = NULL;
+    char **splittedInput = calloc(5, sizeof(char*));
     int isCorrect;
     do
     {
-        free(splittedInput);
+        for(int i=0; i<5; i++)
+            splittedInput[i] = NULL;
         result = getline(&input, &size, stdin);
         if(result != -1)
         {
-            splittedInput = split(input);
-            isCorrect = correct(splittedInput);
+            // splittedInput = split(input);
+            isCorrect = correct(input, splittedInput);
             if(isCorrect == 0)
                 fprintf( stderr, "ERROR\n");
         }

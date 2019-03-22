@@ -3,8 +3,6 @@
 
 #include <stdbool.h>
 
-int correct(char **);
-bool correctCommand(char *);
-bool correctHistory(char *);
+int correct(char *, char **);
 
 #endif // valid_h
